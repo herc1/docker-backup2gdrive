@@ -6,6 +6,6 @@ RUN apt-get -y update
 
 RUN apt-get -y upgrade
 
-RUN apt-get install tar zip cron mysql-client
+RUN apt-get -y install tar zip cron mysql-client
 
 ENTRYPOINT ["cron -f"]

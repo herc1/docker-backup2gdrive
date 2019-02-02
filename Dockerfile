@@ -8,4 +8,4 @@ RUN apt-get -y upgrade
 
 RUN apt-get -y install tar zip cron mysql-client
 
-ENTRYPOINT ["cron -f"]
+ENTRYPOINT ["/usr/sbin/cron -f"]

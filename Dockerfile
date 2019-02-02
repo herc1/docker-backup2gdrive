@@ -6,6 +6,12 @@ RUN apt-get -y update
 
 RUN apt-get -y upgrade
 
-RUN apt-get -y install tar zip cron mysql-client
+RUN apt-get -y install tar zip cron mysql-client wget
+
+RUN wget "https://docs.google.com/uc?id=0B3X9GlR6EmbnQ0FtZmJJUXEyRTA&export=download" -O /usr/bin/gdrive
+
+RUN chmod +x /usr/bin/gdrive
 
 ENTRYPOINT ["/usr/sbin/cron", "-f"]
+
+CMD ["/usr/bin/gdrive", "about"]

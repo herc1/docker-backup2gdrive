@@ -6,7 +6,7 @@ RUN apt-get -y update
 
 RUN apt-get -y upgrade
 
-RUN apt-get -y install tar zip cron mysql-client ssmtp
+RUN apt-get -y install tar zip cron mysql-client ssmtp mpack
 
 COPY entrypoint.sh /
 

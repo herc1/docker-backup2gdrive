@@ -2,7 +2,6 @@
 
 touch /tmp/stdout
 tail -f /tmp/stdout &
-gdrive about > /tmp/stdout
 yes | cp -f /opt/backup/crontab /etc/crontab
 cron -f &
 while true; do

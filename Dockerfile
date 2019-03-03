@@ -8,6 +8,14 @@ RUN apt-get -y upgrade
 
 RUN apt-get -y install tar zip cron mysql-client ssmtp mpack
 
+RUN mkdir /opt/conf
+
+RUN mkdir /opt/backup
+
+COPY crontab /etc/
+
 COPY entrypoint.sh /
+
+COPY backup2mail /
 
 ENTRYPOINT ["/entrypoint.sh"]

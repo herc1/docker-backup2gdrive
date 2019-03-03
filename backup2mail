@@ -1,0 +1,44 @@
+#!/bin/bash
+cd "${0%/*}"
+CFG_DIR="/opt/conf/"
+DATE=$(date +%Y%m%d)
+
+function send_backup() {
+  BACKUP_SIZE=$(du -s "${BACKUP_DIR}.tar.gz" | awk '{print $1}')
+  if (( "${BACKUP_SIZE}" < 8192 )); then
+    mpack -s "Backup ${DATE} - ${NAME}" "${BACKUP_DIR}.tar.gz" "${MAIL_TO}"
+  else
+    split -b 8M -d "${BACKUP_DIR}.tar.gz" "${BACKUP_DIR}.tar.gz.part."
+    for part in $(ls "${BACKUP_DIR}.tar.gz.part.*"); do
+      mpack -s "Backup ${DATE} - ${NAME}" "${BACKUP_DIR}.tar.gz" "${MAIL_TO}"
+    done
+  fi
+  rm -rf "${BACKUP_DIR}.tar.gz*"
+}
+
+for backup in $(ls "${CFG_DIR}/*.conf"); do
+  unset NAME
+  unset SRC_DIR
+  DB_HOST=''
+  DB_NAME=''
+  DB_USER=''
+  DB_PASS=''
+  unset MAIL_TO
+
+  source "${CFG_DIR}"/$backup
+
+  BACKUP_DIR="${NAME}_${DATE}"
+  mkdir $BACKUP_DIR
+
+  for src in ${SRC_DIR[@]}; do
+    cp -rf $src $BACKUP_DIR
+  done
+
+  if [ ! -z ${DB_HOST} ] || [ ! -z ${DB_NAME} ] || [ ! -z ${DB_USER} ]|| [ ! -z ${DB_PASS} ]; then
+    mysqldump -u ${DB_USER} -p${DB_PASS} -h ${DB_HOST} ${DB_NAME} > "${BACKUP_DIR}/${DB_NAME}.sql" 2> /dev/null
+  fi
+
+  tar --warning=no-file-changed -zcf "${BACKUP_DIR}.tar.gz" ${BACKUP_DIR}
+  rm -rf $BACKUP_DIR
+  send_backup
+done

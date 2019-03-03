@@ -16,7 +16,7 @@ function send_backup() {
   rm -rf "${BACKUP_DIR}.tar.gz*"
 }
 
-for backup in $(ls "${CFG_DIR}/*.conf"); do
+for backup in $(ls ${CFG_DIR}/*.conf); do
   unset NAME
   unset SRC_DIR
   DB_HOST=''
@@ -25,7 +25,7 @@ for backup in $(ls "${CFG_DIR}/*.conf"); do
   DB_PASS=''
   unset MAIL_TO
 
-  source "${CFG_DIR}"/$backup
+  source $backup
 
   BACKUP_DIR="${NAME}_${DATE}"
   mkdir $BACKUP_DIR

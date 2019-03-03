@@ -8,9 +8,9 @@ function send_backup() {
   if (( "${BACKUP_SIZE}" < 8192 )); then
     mpack -s "Backup ${DATE} - ${NAME}" "${BACKUP_DIR}.tar.gz" "${MAIL_TO}"
   else
-    split -b 7M -d "${BACKUP_DIR}.tar.gz" "${BACKUP_DIR}.tar.gz.part."
+    split -b 24M -d "${BACKUP_DIR}.tar.gz" "${BACKUP_DIR}.tar.gz.part."
     for part in $(ls ${BACKUP_DIR}.tar.gz.part.*); do
-      mpack -s "Backup ${DATE} - ${NAME}" "${BACKUP_DIR}.tar.gz" "${MAIL_TO}"
+      mpack -s "Backup ${DATE} - ${NAME}" "${part}" "${MAIL_TO}"
     done
   fi
   rm -rf ${BACKUP_DIR}.tar.gz*
